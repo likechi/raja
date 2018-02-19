@@ -574,9 +574,9 @@ function tdcli_update_callback(data)
 پیام موقع اد کردن ]] .. tostring(txtadd) .. [[ 
 ⏫حداکثر گروه ]]..tostring(gp)..[[
 ⏬ حداقل اعضا ]]..tostring(mmbrs)..[[
-👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
-🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
-⬅️🔘✍️ <b>]] .. tostring(sgps) .. [[</b> سوپرگروه🌈👭👬
+👤 ]] .. tostring(usrs) .. [[ چت خصوصی
+🎎 ]] .. tostring(gps) .. [[ گروه عادی
+⬅️🔘✍️ ]] .. tostring(sgps) .. [[ سوپرگروه🌈👭👬
  ]]
 					return send(msg.chat_id_, 0, txt)
                         elseif (text:match("send") or text:match("^(بفرس)$") or text:match("^(ارسال)$") and msg.reply_to_message_id_ ~= 0) then
