@@ -736,6 +736,47 @@ function tdcli_update_callback(data)
 						end	
 					end
 					return send(msg.chat_id_, msg.id_, "<i>کاربر مورد نظر به تمام گروه های من دعوت شد</i>")
+					 elseif text:match("addallmybots") then
+						local list = {redis:smembers("botBOT-IDgroups"),redis:smembers("botBOT-IDsupergroups")}
+						local mybots = redis:smembers("botBOT-IDmybots")
+                        local mybotscount = redis:scard("botBOT-IDmybots")
+                                 for a, b in pairs(list) do
+                                  for i, v in pairs(b) do 
+                                      for t, y in ipairs(mybots) do
+                                              tdcli_function ({
+                                                    ID = "AddChatMember",
+                                                    chat_id_ = v,
+                                                    user_id_ = y,
+                                                    forward_limit_ =  500
+                                                    }, dl_cb, nil)
+                                              end	
+                                            end
+                                          end
+                                          return send (msg.chat_id_, msg.id_, "<code>همه " .. mybotscount .. " کاربر به تمام گروه های من دعوت شدند✔️</code>\n")
+                                        elseif text:match("addmybot (%d+)") then
+                                          local mybot = text:match("addmybot (%d+)")
+                                          if not redis:sismember('botBOT-IDmybots', mybot) then
+                                            redis:sadd('botBOT-IDmybots', mybot)
+                                            return send (msg.chat_id_, msg.id_, "<code> ✅ ای دی به لیست اضافه شد </code>\n")
+                                          else
+                                            return send (msg.chat_id_, msg.id_, "<code>👌 ای دی تو لیست من هست</code>\n")
+                                          end
+                                        elseif text:match("delmybot (%d+)") then
+                                          local mybot = text:match("delmybot (%d+)")
+                                          if redis:sismember('botBOT-IDmybots', mybot) then
+                                            redis:srem('botBOT-IDmybots', mybot)
+                                            return send (msg.chat_id_, msg.id_, "<code>❌ ای دی از لیست حذف شد ❌</code>\n")
+                                          else
+                                            return send (msg.chat_id_, msg.id_, "<code>✔️ این ای دی تو لیست نبود ⁉️⁉️ </code>\n")
+                                          end
+                                        elseif text:match("list") or text:match("^(لیست)$") or text:match("^(11)$") then
+                                          local mybots = redis:smembers ("botBOT-IDmybots") 
+                                          local tt = "اد لیست گروهی ربات \n  \n 🔲 addallmybots \n  🔳 اد شدن ای دی های زیر به سوپر گروههای ربات  \n 🔲 addmybot 🆔(ID) \n 🔳 اضافه کردن ای دی به این لیست \n 🔲 delmybot 🆔(ID) \n 🔳 حذف ای دی از این لیست \n \n 🅰➿➿➿➿➿ \n 349469421 \n 🅰➿➿➿➿➿"
+                                          for i, v in pairs(mybots) do
+                           tt = tt .. "\n" .. v .. "\n"
+                          tt = tt .. "🅰➿➿➿➿➿\n"
+                     end
+                 return send (msg.chat_id_, msg.id_, "<code>"..tt.."</code>\n")
 				elseif (text:match("^(انلاین)$") and not msg.forward_info_)then
 					return tdcli_function({
 						ID = "ForwardMessages",
