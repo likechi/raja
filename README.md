@@ -11,7 +11,7 @@
 
 ارسال در یک خط
 
-git clone https://github.com/likechi/we && cd we && chmod +x bot && ./bot install
+git clone https://github.com/likechi/fd && cd fd && chmod +x bot && ./bot install
 
 y
 
@@ -22,8 +22,8 @@ y
 ارسال گزینه های زیر بصورت پشت سر هم  با اینتر
 
 ```sh
-git clone https://github.com/likechi/we
-cd we
+git clone https://github.com/likechi/fd
+cd fd
 chmod +x bot
 ./bot install
 # and send [y] to finish install
@@ -39,7 +39,7 @@ chmod +x bot
 ## ساخت ربات های بیش تر
 
 ```sh
-cd we
+cd fd
 ./bot create
 ./bot number of bot >> شماره رباتی که به شما میدهد
 وارد کردن ایدی عددی سودو #
@@ -48,7 +48,7 @@ cd we
 * * *
 ## اتولاچ
 ```sh
-cd we
+cd fd
 ./bot autolaunch
 تمام ربات ها راه اندازی میشوند بدون خاموشی #
 ```
