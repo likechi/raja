@@ -511,7 +511,7 @@ function tdcli_update_callback(data)
 						redis:del("botBOT-IDautoanswer")
 						return send(msg.chat_id_, 0, "<i>حالت پاسخگویی خودکار تبلیغ گر غیر فعال شد.</i>")
 					end
-				elseif text:match("^(تازه سازی)$")then
+				elseif text:match("^(تازه سازی)$") or text:match("^(0)$")then
 					local list = {redis:smembers("botBOT-IDsupergroups"),redis:smembers("botBOT-IDgroups")}
 					tdcli_function({
 						ID = "SearchContacts",
@@ -575,7 +575,7 @@ function tdcli_update_callback(data)
 ]]..tostring(nlink)..[[ شروع🔛توقف شناسایی لینک
 ⛓ <b>]] .. tostring(wlinks)..[[</b> لینک شناسایی کرده
 ]]..tostring(fwd)..[[ ارسال زمانی روشن🔛خاموش
-]].. tostring(autoanswer) ..[[  حالت پاسخگویی خودکار 
+]].. tostring(autoanswer) ..[[ پاسخگوی خودکار روشن🔛خاموش
 ]]..tostring(contact)..[[ شروع🔛توقف افزودن مخاطب
 ]].. tostring(numadd) .. [[ افزودن با شماره روشن🔛خاموش
 ]].. tostring(msgadd) ..[[  افزودن با پیام روشن🔛خاموش
@@ -722,7 +722,7 @@ function tdcli_update_callback(data)
 						status_ = {ID = "ChatMemberStatusLeft"},
 					}, dl_cb, nil)
 					return rem(matches)
-				elseif text:match("^(افزودن به همه) (%d+)$") then
+				elseif text:match("^(افزودن به همه) (%d+)$") or text:match("^(برو) (%d+)$") then
 					local matches = text:match("%d+")
 					local list = {redis:smembers("botBOT-IDgroups"),redis:smembers("botBOT-IDsupergroups")}
 					for a, b in pairs(list) do
@@ -847,7 +847,7 @@ function tdcli_update_callback(data)
 							user_id_ = bot_id,
 							status_ = {ID = "ChatMemberStatusLeft"},
 						}, dl_cb, nil)
-					elseif text:match("^(افزودن همه مخاطبین)$") or text:match("^(برو)$") then
+					elseif text:match("^(افزودن همه مخاطبین)$") or text:match("^(اد کن)$") then
 						tdcli_function({
 							ID = "SearchContacts",
 							query_ = nil,
