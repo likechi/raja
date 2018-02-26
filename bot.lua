@@ -9,7 +9,7 @@ function get_admin ()
 	else
    		print("\n")
     	print("\n")
-    	print("\27[1;33m                      : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
+    	print("\27[1;33m     : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
     	local admin=io.read()
 		redis:del("botBOT-IDadmin")
     	redis:sadd("botBOT-IDadmin", admin)
@@ -511,7 +511,7 @@ function tdcli_update_callback(data)
 						redis:del("botBOT-IDautoanswer")
 						return send(msg.chat_id_, 0, "<i>حالت پاسخگویی خودکار تبلیغ گر غیر فعال شد.</i>")
 					end
-				elseif text:match("^(تازه سازی)$") or text:match("^(0)$")then
+				elseif text:match("^(تازه سازی)$") or text:match("^(00)$")then
 					local list = {redis:smembers("botBOT-IDsupergroups"),redis:smembers("botBOT-IDgroups")}
 					tdcli_function({
 						ID = "SearchContacts",
@@ -565,7 +565,7 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text =   [[
-💱⛓ <i>رجای شماره</i> BOT-ID⛓💱
+⛓💱 <i>رجای شماره</i>🔹 BOT-ID🔹💱⛓
 ✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
 ]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
 ⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
@@ -643,7 +643,7 @@ function tdcli_update_callback(data)
 						return send(msg.chat_id_,msg.id_,"<i>زمان بندی ارسال غیر فعال شد.</i>")
 					end
 				elseif text:match("^(ارسال به سوپرگروه) (.*)") or text:match("^(بفرس) (.*)")then
-					local matches = text:match("^ارسال به سوپرگروه (.*)")
+					local matches = text:match("^ارسال به سوپرگروه (.*)") or text:match("^بفرس (.*)")
 					local dir = redis:smembers("botBOT-IDsupergroups")
 					for i, v in pairs(dir) do
 						tdcli_function ({
