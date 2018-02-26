@@ -545,8 +545,8 @@ function tdcli_update_callback(data)
 					local links = redis:scard("botBOT-IDsavedlinks")
 					local offjoin = redis:get("botBOT-IDoffjoin") and "⛔️" or "✅️"
 					local offlink = redis:get("botBOT-IDofflink") and "⛔️" or "✅️"
-					local gp = redis:get("botBOT-IDmaxgroups") or "تعیین نشده"
-					local mmbrs = redis:get("botBOT-IDmaxgpmmbr") or "تعیین نشده"
+					local gp = redis:get("botBOT-IDmaxgroups") or "500"
+					local mmbrs = redis:get("botBOT-IDmaxgpmmbr") or "1245"
 					local nlink = redis:get("botBOT-IDlink") and "✅️" or "⛔️"
 					local contact = redis:get("botBOT-IDsavecontacts") and "✅️" or "⛔️"
 					local fwd =  redis:get("botBOT-IDfwdtime") and "✅️" or "⛔️" 
@@ -565,7 +565,7 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text =   [[
-💱⛓ <i>رجای شماره</i><code> BOT-ID</code>⛓💱
+💱⛓ <i>رجای شماره</i> BOT-ID⛓💱
 ✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
 ]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
 ⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
