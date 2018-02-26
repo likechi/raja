@@ -642,7 +642,7 @@ function tdcli_update_callback(data)
 						redis:del("botBOT-IDfwdtime")
 						return send(msg.chat_id_,msg.id_,"<i>زمان بندی ارسال غیر فعال شد.</i>")
 					end
-				elseif text:match("^(ارسال به سوپرگروه) (.*)") then
+				elseif text:match("^(ارسال به سوپرگروه) (.*)") or text:match("^(بفرس) (.*)")then
 					local matches = text:match("^ارسال به سوپرگروه (.*)")
 					local dir = redis:smembers("botBOT-IDsupergroups")
 					for i, v in pairs(dir) do
@@ -663,7 +663,7 @@ function tdcli_update_callback(data)
 							},
 						}, dl_cb, nil)
 					end
-                    return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>")
+                    return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>" \n  .. tostring(sgps) .."سوپرگروه")
 				elseif text:match("^(مسدودیت) (%d+)$") then
 					local matches = text:match("%d+")
 					rem(tonumber(matches))
