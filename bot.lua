@@ -9,7 +9,7 @@ function get_admin ()
 	else
    		print("\n")
     	print("\n")
-    	print("\n\27[36m                      : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
+    	print("\27[1;33m                      : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
     	local admin=io.read()
 		redis:del("botBOT-IDadmin")
     	redis:sadd("botBOT-IDadmin", admin)
@@ -663,7 +663,7 @@ function tdcli_update_callback(data)
 							},
 						}, dl_cb, nil)
 					end
-                    return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>" \n  .. tostring(sgps) .."سوپرگروه")
+                    return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>" )
 				elseif text:match("^(مسدودیت) (%d+)$") then
 					local matches = text:match("%d+")
 					rem(tonumber(matches))
