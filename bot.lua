@@ -585,12 +585,12 @@ function tdcli_update_callback(data)
 حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
 📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
 📊 <b>]] .. tostring(links)..[[</b> لینک عضو و ذخیره کرده
-<b> ]] .. tostring(sima) .. [[ </b>
+خروچ از همه گروهها👇⛔️
+*raja#
 👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
 🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
 ⬅️🔘✍️ <b>]] .. tostring(sgps) .. [[</b> سوپرگروه🌈👭👬
-خروچ از همه گروهها👇⛔️
-*raja#
+<b>]] .. tostring(sima) .. [[</b>
  ]]
 					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
