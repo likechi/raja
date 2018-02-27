@@ -565,7 +565,7 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text =   [[
-⛓💱 <i>رجای شماره</i> BOT-ID💱⛓
+⛓💱 <i>رجای شماره</i> BOT-ID🚥💱⛓
 ✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
 ]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
 ⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
@@ -579,7 +579,8 @@ function tdcli_update_callback(data)
 ]]..tostring(contact)..[[ شروع🔛توقف افزودن مخاطب
 ]].. tostring(numadd) .. [[ افزودن با شماره روشن🔛خاموش
 ]].. tostring(msgadd) ..[[  افزودن با پیام روشن🔛خاموش
-پیام ربات👈 ]] .. tostring(txtadd) ..[[ 
+پیام ربات👈موقع اد کردن شراکانت👇 
+]] .. tostring(txtadd) ..[[ 
 حداکثر گروه<i> ]]..tostring(gp)..[[</i> 
 حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
 📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
