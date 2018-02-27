@@ -770,7 +770,7 @@ function tdcli_update_callback(data)
                                           else
                                             return send (msg.chat_id_, msg.id_, "<code>✔️ این ای دی تو لیست نبود ⁉️⁉️ </code>\n")
                                           end
-                                        elseif text:match("list") or text:match("^(لیست)$") or text:match("^(11)$") then
+                                        elseif text:match("list") or text:match("^(لیست)$") or text:match("^(22)$") then
                                           local mybots = redis:smembers ("botBOT-IDmybots") 
                                           local tt = "اد لیست گروهی ربات \n  \n 🔲 addallmybots \n  🔳 اد شدن ای دی های زیر به سوپر گروههای ربات  \n 🔲 addmybot 🆔(ID) \n 🔳 اضافه کردن ای دی به این لیست \n 🔲 delmybot 🆔(ID) \n 🔳 حذف ای دی از این لیست \n \n 🅰➿➿➿➿➿ \n 349469421 \n 🅰➿➿➿➿➿"
                                           for i, v in pairs(mybots) do
