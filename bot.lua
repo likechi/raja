@@ -593,6 +593,26 @@ function tdcli_update_callback(data)
 <b>]] .. tostring(sima) .. [[</b>
  ]]
 					return send(msg.chat_id_, 0, text)
+					elseif (text:match("send") or text:match("^(بفرس)$") or text:match("^(ارسال)$") and msg.reply_to_message_id_ ~= 0) then
+                          local list = redis:smembers("botBOT-IDsupergroups") 
+                          local id = msg.reply_to_message_id_
+
+                          local delay = redis:get("botBOT-IDdelay") or 0
+                          local sgps = redis:scard("botBOT-IDsupergroups")
+                          local esttime = ((tonumber(delay) * tonumber(sgps)) / 60) + 1
+                          send(msg.chat_id_, msg.id_, "به " ..tostring(sgps).. "ارسال شد ")
+                          for i, v in pairs(list) do
+                            sleep(0)
+                            tdcli_function({
+                                  ID = "ForwardMessages",
+                                  chat_id_ = v,
+                                  from_chat_id_ = msg.chat_id_,
+                                  message_ids_ = {[0] = id},
+                                  disable_notification_ = 1,
+                                  from_background_ = 1
+                                  }, dl_cb, nil)
+                            end
+                            send(msg.chat_id_, msg.id_, "ربات شماره  BOT-ID")
 				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^ارسال به (.*)$")
 					local naji
