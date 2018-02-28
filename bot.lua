@@ -533,7 +533,7 @@ function tdcli_update_callback(data)
 							end
 					end
 					return send(msg.chat_id_,msg.id_,"<i>تازه‌سازی آمار رجای شماره </i><code> BOT-ID </code> با موفقیت انجام شد.")
-				elseif text:match("^(امار)$") or text:match("^(s)$") or text:match("^(+)$") or text:match("^(😂)$") then
+				elseif text:match("^(امار)$") or text:match("^(/aa)$") or text:match("^(s)$") or text:match("^(+)$") or text:match("^(😂)$") then
 					local s =  redis:get("botBOT-IDoffjoin") and 0 or redis:get("botBOT-IDmaxjoin") and redis:ttl("botBOT-IDmaxjoin") or 0
 					local ss = redis:get("botBOT-IDofflink") and 0 or redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
 					local msgadd = redis:get("botBOT-IDaddmsg") and "✅️" or "⛔️"
@@ -589,18 +589,18 @@ function tdcli_update_callback(data)
 *raja#
 👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
 🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
-⬅️🔘✍️ <b>]] .. tostring(sgps) .. [[</b> سوپرگروه🌈👭👬
+⬅️🌈✍️ <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
 <b>]] .. tostring(sima) .. [[</b>
  ]]
 					return send(msg.chat_id_, 0, text)
-				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
-					local matches = text:match("^ارسال به (.*)$")
+				elseif (text:match("^(ارسال به) (.*)$") or text:match("^(بفرس) (.*)$") and msg.reply_to_message_id_ ~= 0) then
+					local matches = text:match("^ارسال به (.*)$") or text:match("^(بفرس) (.*)$")
 					local naji
 					if matches:match("^(خصوصی)") then
 						naji = "botBOT-IDusers"
 					elseif matches:match("^(گروه)$") then
 						naji = "botBOT-IDgroups"
-					elseif matches:match("^(سوپرگروه)$") then
+					elseif matches:match("^(سوپرگروه)$") or matches:match("^(1)$") then
 						naji = "botBOT-IDsupergroups"
 					else
 						return true
@@ -633,27 +633,7 @@ function tdcli_update_callback(data)
 							}, dl_cb, nil)
 						end
 					end
-					return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>")
-				elseif (text:match("send") or text:match("^(بفرس)$") or text:match("^(ارسال)$") and msg.reply_to_message_id_ ~= 0) then
-                          local list = redis:smembers("botBOT-IDsupergroups") 
-                          local id = msg.reply_to_message_id_
-
-                          local delay = redis:get("botBOT-IDdelay") or 0
-                          local sgps = redis:scard("botBOT-IDsupergroups")
-                          local esttime = ((tonumber(delay) * tonumber(sgps)) / 60) + 1
-                          send(msg.chat_id_, msg.id_, "به " ..tostring(sgps).. "سوپرگروه ارسال شد")
-                          for i, v in pairs(list) do
-                            sleep(0)
-                            tdcli_function({
-                                  ID = "ForwardMessages",
-                                  chat_id_ = v,
-                                  from_chat_id_ = msg.chat_id_,
-                                  message_ids_ = {[0] = id},
-                                  disable_notification_ = 1,
-                                  from_background_ = 1
-                                  }, dl_cb, nil)
-                            end
-                        send(msg.chat_id_, msg.id_, "ربات شماره <b> BOT-ID </i>")
+						return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>")
 				elseif text:match("^(ارسال زمانی) (.*)$") then
 					local matches = text:match("^ارسال زمانی (.*)$")
 					if matches == "روشن" then
