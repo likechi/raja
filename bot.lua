@@ -565,7 +565,7 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text =   [[
-⛓💱 <i>رجای شماره</i> BOT-ID🚥💱⛓
+⛓💱 <i>رجای شماره</i> BOT-ID🚥
 ✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
 ]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
 ⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
@@ -600,7 +600,7 @@ function tdcli_update_callback(data)
 						naji = "botBOT-IDusers"
 					elseif matches:match("^(گروه)$") then
 						naji = "botBOT-IDgroups"
-					elseif matches:match("^(سوپرگروه)$") or matches:match("^(1)$") then
+					elseif matches:match("^(سوپرگروه)$") then
 						naji = "botBOT-IDsupergroups"
 					else
 						return true
@@ -633,7 +633,7 @@ function tdcli_update_callback(data)
 							}, dl_cb, nil)
 						end
 					end
-						return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>")
+						return send(msg.chat_id_, msg.id_, "<i>.با موفقیت فرستاده شد</i>")
 				elseif text:match("^(ارسال زمانی) (.*)$") then
 					local matches = text:match("^ارسال زمانی (.*)$")
 					if matches == "روشن" then
@@ -643,28 +643,6 @@ function tdcli_update_callback(data)
 						redis:del("botBOT-IDfwdtime")
 						return send(msg.chat_id_,msg.id_,"<i>زمان بندی ارسال غیر فعال شد.</i>")
 					end
-				elseif text:match("^(ارسال به سوپرگروه) (.*)") or text:match("^(send) (.*)") then
-					local matches = text:match("^ارسال به سوپرگروه (.*)") or text:match("^(send) (.*)")
-					local dir = redis:smembers("botBOT-IDsupergroups")
-					for i, v in pairs(dir) do
-						tdcli_function ({
-							ID = "SendMessage",
-							chat_id_ = v,
-							reply_to_message_id_ = 0,
-							disable_notification_ = 0,
-							from_background_ = 1,
-							reply_markup_ = nil,
-							input_message_content_ = {
-								ID = "InputMessageText",
-								text_ = matches,
-								disable_web_page_preview_ = 1,
-								clear_draft_ = 0,
-								entities_ = {},
-							parse_mode_ = nil
-							},
-						}, dl_cb, nil)
-					end
-                    return send(msg.chat_id_, msg.id_, "پیام ارسال شد برای : " ..tostring(sgps).. " سوپرگروه. ")
 				elseif text:match("^(مسدودیت) (%d+)$") then
 					local matches = text:match("%d+")
 					rem(tonumber(matches))
