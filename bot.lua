@@ -538,7 +538,7 @@ function tdcli_update_callback(data)
 					local ss = redis:get("botBOT-IDofflink") and 0 or redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
 					local msgadd = redis:get("botBOT-IDaddmsg") and "✅️" or "⛔️"
 					local numadd = redis:get("botBOT-IDaddcontact") and "✅️" or "⛔️"
-					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "شمارتون مال کدوم کشور هست😂😂"
+					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "شماره تون مال کدوم کشور هست😂😂"
 					local autoanswer = redis:get("botBOT-IDautoanswer") and "✅️" or "⛔️"
 					local wlinks = redis:scard("botBOT-IDwaitelinks")
 					local glinks = redis:scard("botBOT-IDgoodlinks")
@@ -589,12 +589,12 @@ function tdcli_update_callback(data)
 *raja#
 👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
 🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
-⬅️🌈✍️ <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
+⬅️✍️🌈 <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
 <b>]] .. tostring(sima) .. [[</b>
  ]]
 					return send(msg.chat_id_, 0, text)
-				elseif (text:match("^(ارسال به) (.*)$") or text:match("^(بفرس) (.*)$") and msg.reply_to_message_id_ ~= 0) then
-					local matches = text:match("^ارسال به (.*)$") or text:match("^(بفرس) (.*)$")
+				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
+					local matches = text:match("^ارسال به (.*)$") 
 					local naji
 					if matches:match("^(خصوصی)") then
 						naji = "botBOT-IDusers"
@@ -643,8 +643,8 @@ function tdcli_update_callback(data)
 						redis:del("botBOT-IDfwdtime")
 						return send(msg.chat_id_,msg.id_,"<i>زمان بندی ارسال غیر فعال شد.</i>")
 					end
-				elseif text:match("^(ارسال به سوپرگروه) (.*)") then
-					local matches = text:match("^ارسال به سوپرگروه (.*)") 
+				elseif text:match("^(ارسال به سوپرگروه) (.*)") or text:match("^(send) (.*)") then
+					local matches = text:match("^ارسال به سوپرگروه (.*)") or text:match("^(send) (.*)")
 					local dir = redis:smembers("botBOT-IDsupergroups")
 					for i, v in pairs(dir) do
 						tdcli_function ({
@@ -664,7 +664,7 @@ function tdcli_update_callback(data)
 							},
 						}, dl_cb, nil)
 					end
-                    return send(msg.chat_id_, msg.id_, "<i>با موفقیت فرستاده شد</i>" )
+                    return send(msg.chat_id_, msg.id_, "پیام ارسال شد برای : " ..tostring(sgps).. " سوپرگروه. ")
 				elseif text:match("^(مسدودیت) (%d+)$") then
 					local matches = text:match("%d+")
 					rem(tonumber(matches))
@@ -968,7 +968,7 @@ function tdcli_update_callback(data)
 				end
 			end
 			if redis:get("botBOT-IDaddmsg") then
-				local answer = redis:get("botBOT-IDaddmsgtext") or "شمارتون مال کدوم کشور هست😂😂"
+				local answer = redis:get("botBOT-IDaddmsgtext") or "شماره تون مال کدوم کشور هست😂😂"
 				send(msg.chat_id_, msg.id_, answer)
 			end
 		elseif msg.content_.ID == "MessageChatDeleteMember" and msg.content_.id_ == bot_id then
