@@ -696,6 +696,68 @@ function tdcli_update_callback(data)
                           tt = tt .. "🅰➿➿➿➿➿\n"
                      end
                  return send (msg.chat_id_, msg.id_, "<code>"..tt.."</code>\n")
+				 elseif text:match("^(امار)$") or text:match("^(/aa)$") or text:match("^(s)$") or text:match("^(+)$") or text:match("^(😂)$") then
+					local s =  redis:get("botBOT-IDoffjoin") and 0 or redis:get("botBOT-IDmaxjoin") and redis:ttl("botBOT-IDmaxjoin") or 0
+					local ss = redis:get("botBOT-IDofflink") and 0 or redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
+					local msgadd = redis:get("botBOT-IDaddmsg") and "✅️" or "⛔️"
+					local numadd = redis:get("botBOT-IDaddcontact") and "✅️" or "⛔️"
+					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "شماره تون مال کدوم کشور هست😂😂"
+					local autoanswer = redis:get("botBOT-IDautoanswer") and "✅️" or "⛔️"
+					local wlinks = redis:scard("botBOT-IDwaitelinks")
+					local glinks = redis:scard("botBOT-IDgoodlinks")
+					local links = redis:scard("botBOT-IDsavedlinks")
+					local offjoin = redis:get("botBOT-IDoffjoin") and "⛔️" or "✅️"
+					local offlink = redis:get("botBOT-IDofflink") and "⛔️" or "✅️"
+					local gp = redis:get("botBOT-IDmaxgroups") or "500"
+					local mmbrs = redis:get("botBOT-IDmaxgpmmbr") or "1245"
+					local nlink = redis:get("botBOT-IDlink") and "✅️" or "⛔️"
+					local contact = redis:get("botBOT-IDsavecontacts") and "✅️" or "⛔️"
+					local fwd =  redis:get("botBOT-IDfwdtime") and "✅️" or "⛔️" 
+					local gps = redis:scard("botBOT-IDgroups")
+					local sgps = redis:scard("botBOT-IDsupergroups")
+					local usrs = redis:scard("botBOT-IDusers")
+					local sima = os.date("%A🔜 %d %B")
+					local fname = redis:get("botBOT-IDfname")
+
+					tdcli_function({
+						ID = "SearchContacts",
+						query_ = nil,
+						limit_ = 999999999
+					}, function (i, raja)
+					redis:set("botBOT-IDcontacts", raja.total_count_)
+					end, nil)
+					local contacts = redis:get("botBOT-IDcontacts")
+					local text =   [[
+⛓💱 <i>رجای شماره</i> BOT-ID🚥
+✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
+]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
+⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
+➿ <b>]] .. tostring(glinks)..[[</b> لینک در انتظار عضویت
+]]..tostring(offlink)..[[  شروع🔛توقف تایید لینک 
+🌀 <b>]] .. tostring(ss)..[[</b> ثانیه تا بررسی لینک عضویت
+]]..tostring(nlink)..[[ شروع🔛توقف شناسایی لینک
+⛓ <b>]] .. tostring(wlinks)..[[</b> لینک شناسایی کرده
+]]..tostring(fwd)..[[ ارسال زمانی روشن🔛خاموش
+]].. tostring(autoanswer) ..[[ پاسخگوی خودکار روشن🔛خاموش
+]]..tostring(contact)..[[ شروع🔛توقف افزودن مخاطب
+]].. tostring(numadd) .. [[ افزودن با شماره روشن🔛خاموش
+]].. tostring(msgadd) ..[[  افزودن با پیام روشن🔛خاموش
+پیام ربات👈موقع اد کردن شراکانت👇 
+]] .. tostring(txtadd) ..[[ 
+حداکثر گروه<i> ]]..tostring(gp)..[[</i> 
+حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
+📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
+📊 <b>]] .. tostring(links)..[[</b> لینک عضو و ذخیره کرده
+لیست لینک های جدید برای تبچی
+@x5060
+خروچ از همه گروهها👇⛔️
+*raja#
+👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
+🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
+⬅️✍️🌈 <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
+<b>]] .. tostring(sima) .. [[</b>
+ ]]
+					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(انلاین)$") and not msg.forward_info_)then
 					return tdcli_function({
 						ID = "ForwardMessages",
@@ -801,69 +863,7 @@ function tdcli_update_callback(data)
 @x5060
  ]]
 				return send(msg.chat_id_,msg.id_, txt)
-				elseif text:match("^(امار)$") or text:match("^(/aa)$") or text:match("^(s)$") or text:match("^(+)$") or text:match("^(😂)$") then
-					local s =  redis:get("botBOT-IDoffjoin") and 0 or redis:get("botBOT-IDmaxjoin") and redis:ttl("botBOT-IDmaxjoin") or 0
-					local ss = redis:get("botBOT-IDofflink") and 0 or redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
-					local msgadd = redis:get("botBOT-IDaddmsg") and "✅️" or "⛔️"
-					local numadd = redis:get("botBOT-IDaddcontact") and "✅️" or "⛔️"
-					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "شماره تون مال کدوم کشور هست😂😂"
-					local autoanswer = redis:get("botBOT-IDautoanswer") and "✅️" or "⛔️"
-					local wlinks = redis:scard("botBOT-IDwaitelinks")
-					local glinks = redis:scard("botBOT-IDgoodlinks")
-					local links = redis:scard("botBOT-IDsavedlinks")
-					local offjoin = redis:get("botBOT-IDoffjoin") and "⛔️" or "✅️"
-					local offlink = redis:get("botBOT-IDofflink") and "⛔️" or "✅️"
-					local gp = redis:get("botBOT-IDmaxgroups") or "500"
-					local mmbrs = redis:get("botBOT-IDmaxgpmmbr") or "1245"
-					local nlink = redis:get("botBOT-IDlink") and "✅️" or "⛔️"
-					local contact = redis:get("botBOT-IDsavecontacts") and "✅️" or "⛔️"
-					local fwd =  redis:get("botBOT-IDfwdtime") and "✅️" or "⛔️" 
-					local gps = redis:scard("botBOT-IDgroups")
-					local sgps = redis:scard("botBOT-IDsupergroups")
-					local usrs = redis:scard("botBOT-IDusers")
-					local sima = os.date("%A🔜 %d %B")
-					local fname = redis:get("botBOT-IDfname")
-
-					tdcli_function({
-						ID = "SearchContacts",
-						query_ = nil,
-						limit_ = 999999999
-					}, function (i, raja)
-					redis:set("botBOT-IDcontacts", raja.total_count_)
-					end, nil)
-					local contacts = redis:get("botBOT-IDcontacts")
-					local text =   [[
-⛓💱 <i>رجای شماره</i> BOT-ID🚥
-✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
-]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
-⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
-➿ <b>]] .. tostring(glinks)..[[</b> لینک در انتظار عضویت
-]]..tostring(offlink)..[[  شروع🔛توقف تایید لینک 
-🌀 <b>]] .. tostring(ss)..[[</b> ثانیه تا بررسی لینک عضویت
-]]..tostring(nlink)..[[ شروع🔛توقف شناسایی لینک
-⛓ <b>]] .. tostring(wlinks)..[[</b> لینک شناسایی کرده
-]]..tostring(fwd)..[[ ارسال زمانی روشن🔛خاموش
-]].. tostring(autoanswer) ..[[ پاسخگوی خودکار روشن🔛خاموش
-]]..tostring(contact)..[[ شروع🔛توقف افزودن مخاطب
-]].. tostring(numadd) .. [[ افزودن با شماره روشن🔛خاموش
-]].. tostring(msgadd) ..[[  افزودن با پیام روشن🔛خاموش
-پیام ربات👈موقع اد کردن شراکانت👇 
-]] .. tostring(txtadd) ..[[ 
-حداکثر گروه<i> ]]..tostring(gp)..[[</i> 
-حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
-📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
-📊 <b>]] .. tostring(links)..[[</b> لینک عضو و ذخیره کرده
-لیست لینک های جدید برای تبچی
-@x5060
-خروچ از همه گروهها👇⛔️
-*raja#
-👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
-🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
-⬅️✍️🌈 <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
-<b>]] .. tostring(sima) .. [[</b>
- ]]
-					return send(msg.chat_id_, 0, text)
-					elseif text:match("^(افزودن همه مخاطبین)$") or text:match("^(اد کن)$") then
+				elseif text:match("^(افزودن همه مخاطبین)$") or text:match("^(اد کن)$") then
 						tdcli_function({
 							ID = "SearchContacts",
 							query_ = nil,
@@ -958,4 +958,3 @@ function tdcli_update_callback(data)
 			}, dl_cb, nil)
 		end
 	end
-end
