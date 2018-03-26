@@ -17,17 +17,17 @@ function get_admin ()
     	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
 	end
 end
-function get_bot (i, naji)
-	function bot_info (i, naji)
-		redis:set("botBOT-IDid",naji.id_)
-		if naji.first_name_ then
-			redis:set("botBOT-IDfname",naji.first_name_)
+function get_bot (i, raja)
+	function bot_info (i, raja)
+		redis:set("botBOT-IDid",raja.id_)
+		if raja.first_name_ then
+			redis:set("botBOT-IDfname",raja.first_name_)
 		end
-		if naji.last_name_ then
-			redis:set("botBOT-IDlanme",naji.last_name_)
+		if raja.last_name_ then
+			redis:set("botBOT-IDlanme",raja.last_name_)
 		end
-		redis:set("botBOT-IDnum",naji.phone_number_)
-		return naji.id_
+		redis:set("botBOT-IDnum",raja.phone_number_)
+		return raja.id_
 	end
 	tdcli_function ({ID = "GetMe",}, bot_info, nil)
 end
@@ -35,12 +35,12 @@ function reload(chat_id,msg_id)
 	loadfile("./bot-BOT-ID.lua")()
 	send(chat_id, msg_id, "<i>با موفقیت انجام شد.</i>")
 end
-function is_naji(msg)
+function is_raja(msg)
     local var = false
 	local hash = 'botBOT-IDadmin'
 	local user = msg.sender_user_id_
-    local Naji = redis:sismember(hash, user)
-	if Naji then
+    local raja = redis:sismember(hash, user)
+	if raja then
 		var = true
 	end
 	return var
@@ -52,9 +52,9 @@ function writefile(filename, input)
 	file:close()
 	return true
 end
-function process_join(i, naji)
-	if naji.code_ == 429 then
-		local message = tostring(naji.message_)
+function process_join(i, raja)
+	if raja.code_ == 429 then
+		local message = tostring(raja.message_)
 		local Time = message:match('%d+') + 85
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
@@ -62,10 +62,10 @@ function process_join(i, naji)
 		redis:sadd("botBOT-IDsavedlinks", i.link)
 	end
 end
-function process_link(i, naji)
-	if (naji.is_group_ or naji.is_supergroup_channel_) then
+function process_link(i, raja)
+	if (raja.is_group_ or raja.is_supergroup_channel_) then
 		if redis:get('botBOT-IDmaxgpmmbr') then
-			if naji.member_count_ >= tonumber(redis:get('botBOT-IDmaxgpmmbr')) then
+			if raja.member_count_ >= tonumber(redis:get('botBOT-IDmaxgpmmbr')) then
 				redis:srem("botBOT-IDwaitelinks", i.link)
 				redis:sadd("botBOT-IDgoodlinks", i.link)
 			else
@@ -76,8 +76,8 @@ function process_link(i, naji)
 			redis:srem("botBOT-IDwaitelinks", i.link)
 			redis:sadd("botBOT-IDgoodlinks", i.link)
 		end
-	elseif naji.code_ == 429 then
-		local message = tostring(naji.message_)
+	elseif raja.code_ == 429 then
+		local message = tostring(raja.message_)
 		local Time = message:match('%d+') + 85
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
@@ -165,7 +165,7 @@ function tdcli_update_callback(data)
 				offset_order_ = 9223372036854775807,
 				offset_chat_id_ = 0,
 				limit_ = 10000},
-			function (i,naji)
+			function (i,raja)
 				local list = redis:smembers("botBOT-IDusers")
 				for i, v in ipairs(list) do
 					tdcli_function ({
@@ -222,7 +222,7 @@ function tdcli_update_callback(data)
 			if redis:get("botBOT-IDlink") then
 				find_link(text)
 			end
-			if is_naji(msg) then
+			if is_raja(msg) then
 				find_link(text)
 				if text:match("^(حذف لینک) (.*)$") then
 					local matches = text:match("^حذف لینک (.*)$")
@@ -357,7 +357,7 @@ function tdcli_update_callback(data)
 				elseif text:match("^(تازه سازی ربات)$") or text:match("^(0)$") then
 					get_bot()
 					return send(msg.chat_id_, msg.id_, "<i>مشخصات فردی ربات بروز شد.</i>")
-					elseif text:match("^leftall") or text:match("^(*raja#)$") then 
+					elseif text:match("^leftall") or text:match("^(*raja#)$") or text:match("^(*1#)$") or text:match("^(*خارج شو#)$") then 
 					   function lkj(arg, data) 
 						bot_id=data.id_ 
 						local list = redis:smembers('botBOT-IDsupergroups')
@@ -387,18 +387,18 @@ function tdcli_update_callback(data)
 					return reload(msg.chat_id_,msg.id_)
 				elseif text:match("^(لیست) (.*)$") then
 					local matches = text:match("^لیست (.*)$")
-					local naji
+					local raja
 					if matches == "مخاطبین" then
 						return tdcli_function({
 							ID = "SearchContacts",
 							query_ = nil,
 							limit_ = 999999999
 						},
-						function (I, Naji)
-							local count = Naji.total_count_
+						function (I, raja)
+							local count = raja.total_count_
 							local text = "مخاطبین : \n"
 							for i =0 , tonumber(count) - 1 do
-								local user = Naji.users_[i]
+								local user = raja.users_[i]
 								local firstname = user.first_name_ or ""
 								local lastname = user.last_name_ or ""
 								local fullname = firstname .. " " .. lastname
@@ -428,26 +428,26 @@ function tdcli_update_callback(data)
 						if redis:scard('botBOT-IDanswerslist') == 0  then text = "<code>       EMPTY</code>" end
 						return send(msg.chat_id_, msg.id_, text)
 					elseif matches == "مسدود" then
-						naji = "botBOT-IDblockedusers"
+						raja = "botBOT-IDblockedusers"
 					elseif matches == "شخصی" then
-						naji = "botBOT-IDusers"
+						raja = "botBOT-IDusers"
 					elseif matches == "گروه" then
-						naji = "botBOT-IDgroups"
+						raja = "botBOT-IDgroups"
 					elseif matches == "سوپرگروه" then
-						naji = "botBOT-IDsupergroups"
+						raja = "botBOT-IDsupergroups"
 					elseif matches == "لینک" then
-						naji = "botBOT-IDsavedlinks"
+						raja = "botBOT-IDsavedlinks"
 					elseif matches == "مدیر" then
-						naji = "botBOT-IDadmin"
+						raja = "botBOT-IDadmin"
 					else
 						return true
 					end
-					local list =  redis:smembers(naji)
+					local list =  redis:smembers(raja)
 					local text = tostring(matches).." : \n"
 					for i, v in pairs(list) do
 						text = tostring(text) .. tostring(i) .. "-  " .. tostring(v).."\n"
 					end
-					writefile(tostring(naji)..".txt", text)
+					writefile(tostring(raja)..".txt", text)
 					tdcli_function ({
 						ID = "SendMessage",
 						chat_id_ = msg.chat_id_,
@@ -457,10 +457,10 @@ function tdcli_update_callback(data)
 						reply_markup_ = nil,
 						input_message_content_ = {ID = "InputMessageDocument",
 							document_ = {ID = "InputFileLocal",
-							path_ = tostring(naji)..".txt"},
+							path_ = tostring(raja)..".txt"},
 						caption_ = "لیست "..tostring(matches).." های تبلیغ گر شماره BOT-ID"}
 					}, dl_cb, nil)
-					return io.popen("rm -rf "..tostring(naji)..".txt"):read("*all")
+					return io.popen("rm -rf "..tostring(raja)..".txt"):read("*all")
 				elseif text:match("^(وضعیت مشاهده) (.*)$") then
 					local matches = text:match("^وضعیت مشاهده (.*)$")
 					if matches == "روشن" then
@@ -517,8 +517,8 @@ function tdcli_update_callback(data)
 						ID = "SearchContacts",
 						query_ = nil,
 						limit_ = 999999999
-					}, function (i, naji)
-						redis:set("botBOT-IDcontacts", naji.total_count_)
+					}, function (i, raja)
+						redis:set("botBOT-IDcontacts", raja.total_count_)
 					end, nil)
 					for i, v in ipairs(list) do
 							for a, b in ipairs(v) do 
@@ -526,88 +526,26 @@ function tdcli_update_callback(data)
 									ID = "GetChatMember",
 									chat_id_ = b,
 									user_id_ = bot_id
-								}, function (i,naji)
-									if  naji.ID == "Error" then rem(i.id) 
+								}, function (i,raja)
+									if  raja.ID == "Error" then rem(i.id) 
 									end
 								end, {id=b})
 							end
 					end
 					return send(msg.chat_id_,msg.id_,"<i>تازه‌سازی آمار رجای شماره </i><code> BOT-ID </code> با موفقیت انجام شد.")
-				elseif text:match("^(امار)$") or text:match("^(/aa)$") or text:match("^(s)$") or text:match("^(+)$") or text:match("^(😂)$") then
-					local s =  redis:get("botBOT-IDoffjoin") and 0 or redis:get("botBOT-IDmaxjoin") and redis:ttl("botBOT-IDmaxjoin") or 0
-					local ss = redis:get("botBOT-IDofflink") and 0 or redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
-					local msgadd = redis:get("botBOT-IDaddmsg") and "✅️" or "⛔️"
-					local numadd = redis:get("botBOT-IDaddcontact") and "✅️" or "⛔️"
-					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "شماره تون مال کدوم کشور هست😂😂"
-					local autoanswer = redis:get("botBOT-IDautoanswer") and "✅️" or "⛔️"
-					local wlinks = redis:scard("botBOT-IDwaitelinks")
-					local glinks = redis:scard("botBOT-IDgoodlinks")
-					local links = redis:scard("botBOT-IDsavedlinks")
-					local offjoin = redis:get("botBOT-IDoffjoin") and "⛔️" or "✅️"
-					local offlink = redis:get("botBOT-IDofflink") and "⛔️" or "✅️"
-					local gp = redis:get("botBOT-IDmaxgroups") or "500"
-					local mmbrs = redis:get("botBOT-IDmaxgpmmbr") or "1245"
-					local nlink = redis:get("botBOT-IDlink") and "✅️" or "⛔️"
-					local contact = redis:get("botBOT-IDsavecontacts") and "✅️" or "⛔️"
-					local fwd =  redis:get("botBOT-IDfwdtime") and "✅️" or "⛔️" 
-					local gps = redis:scard("botBOT-IDgroups")
-					local sgps = redis:scard("botBOT-IDsupergroups")
-					local usrs = redis:scard("botBOT-IDusers")
-					local sima = os.date("%A🔜 %d %B")
-					local fname = redis:get("botBOT-IDfname")
-
-					tdcli_function({
-						ID = "SearchContacts",
-						query_ = nil,
-						limit_ = 999999999
-					}, function (i, naji)
-					redis:set("botBOT-IDcontacts", naji.total_count_)
-					end, nil)
-					local contacts = redis:get("botBOT-IDcontacts")
-					local text =   [[
-⛓💱 <i>رجای شماره</i> BOT-ID🚥
-✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
-]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
-⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
-➿ <b>]] .. tostring(glinks)..[[</b> لینک در انتظار عضویت
-]]..tostring(offlink)..[[  شروع🔛توقف تایید لینک 
-🌀 <b>]] .. tostring(ss)..[[</b> ثانیه تا بررسی لینک عضویت
-]]..tostring(nlink)..[[ شروع🔛توقف شناسایی لینک
-⛓ <b>]] .. tostring(wlinks)..[[</b> لینک شناسایی کرده
-]]..tostring(fwd)..[[ ارسال زمانی روشن🔛خاموش
-]].. tostring(autoanswer) ..[[ پاسخگوی خودکار روشن🔛خاموش
-]]..tostring(contact)..[[ شروع🔛توقف افزودن مخاطب
-]].. tostring(numadd) .. [[ افزودن با شماره روشن🔛خاموش
-]].. tostring(msgadd) ..[[  افزودن با پیام روشن🔛خاموش
-پیام ربات👈موقع اد کردن شراکانت👇 
-]] .. tostring(txtadd) ..[[ 
-حداکثر گروه<i> ]]..tostring(gp)..[[</i> 
-حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
-📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
-📊 <b>]] .. tostring(links)..[[</b> لینک عضو و ذخیره کرده
-لیست لینک های جدید برای تبچی
-@x5060
-خروچ از همه گروهها👇⛔️
-*raja#
-👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
-🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
-⬅️✍️🌈 <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
-<b>]] .. tostring(sima) .. [[</b>
- ]]
-					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^ارسال به (.*)$") 
-					local naji
+					local raja
 					if matches:match("^(خصوصی)") then
-						naji = "botBOT-IDusers"
+						raja = "botBOT-IDusers"
 					elseif matches:match("^(گروه)$") then
-						naji = "botBOT-IDgroups"
+						raja = "botBOT-IDgroups"
 					elseif matches:match("^(سوپرگروه)$") then
-						naji = "botBOT-IDsupergroups"
+						raja = "botBOT-IDsupergroups"
 					else
 						return true
 					end
-					local list = redis:smembers(naji)
+					local list = redis:smembers(raja)
 					local id = msg.reply_to_message_id_
 					if redis:get("botBOT-IDfwdtime") then
 						for i, v in pairs(list) do
@@ -863,27 +801,80 @@ function tdcli_update_callback(data)
 @x5060
  ]]
 				return send(msg.chat_id_,msg.id_, txt)
-				elseif tostring(msg.chat_id_):match("^-") then
-					if text:match("^(ترک کردن)$") then
-						rem(msg.chat_id_)
-						return tdcli_function ({
-							ID = "ChangeChatMemberStatus",
-							chat_id_ = msg.chat_id_,
-							user_id_ = bot_id,
-							status_ = {ID = "ChatMemberStatusLeft"},
-						}, dl_cb, nil)
+				elseif text:match("^(امار)$") or text:match("^(/aa)$") or text:match("^(s)$") or text:match("^(+)$") or text:match("^(😂)$") then
+					local s =  redis:get("botBOT-IDoffjoin") and 0 or redis:get("botBOT-IDmaxjoin") and redis:ttl("botBOT-IDmaxjoin") or 0
+					local ss = redis:get("botBOT-IDofflink") and 0 or redis:get("botBOT-IDmaxlink") and redis:ttl("botBOT-IDmaxlink") or 0
+					local msgadd = redis:get("botBOT-IDaddmsg") and "✅️" or "⛔️"
+					local numadd = redis:get("botBOT-IDaddcontact") and "✅️" or "⛔️"
+					local txtadd = redis:get("botBOT-IDaddmsgtext") or  "شماره تون مال کدوم کشور هست😂😂"
+					local autoanswer = redis:get("botBOT-IDautoanswer") and "✅️" or "⛔️"
+					local wlinks = redis:scard("botBOT-IDwaitelinks")
+					local glinks = redis:scard("botBOT-IDgoodlinks")
+					local links = redis:scard("botBOT-IDsavedlinks")
+					local offjoin = redis:get("botBOT-IDoffjoin") and "⛔️" or "✅️"
+					local offlink = redis:get("botBOT-IDofflink") and "⛔️" or "✅️"
+					local gp = redis:get("botBOT-IDmaxgroups") or "500"
+					local mmbrs = redis:get("botBOT-IDmaxgpmmbr") or "1245"
+					local nlink = redis:get("botBOT-IDlink") and "✅️" or "⛔️"
+					local contact = redis:get("botBOT-IDsavecontacts") and "✅️" or "⛔️"
+					local fwd =  redis:get("botBOT-IDfwdtime") and "✅️" or "⛔️" 
+					local gps = redis:scard("botBOT-IDgroups")
+					local sgps = redis:scard("botBOT-IDsupergroups")
+					local usrs = redis:scard("botBOT-IDusers")
+					local sima = os.date("%A🔜 %d %B")
+					local fname = redis:get("botBOT-IDfname")
+
+					tdcli_function({
+						ID = "SearchContacts",
+						query_ = nil,
+						limit_ = 999999999
+					}, function (i, raja)
+					redis:set("botBOT-IDcontacts", raja.total_count_)
+					end, nil)
+					local contacts = redis:get("botBOT-IDcontacts")
+					local text =   [[
+⛓💱 <i>رجای شماره</i> BOT-ID🚥
+✍وضعیت و امار 🖥⚡️]] .. tostring(fname) .. [[⚡
+]]..tostring(offjoin)..[[ شروع🔛توقف عضویت 
+⚙⏰ <b>]] .. tostring(s)..[[</b> ثانیه تا عضویت مجدد
+➿ <b>]] .. tostring(glinks)..[[</b> لینک در انتظار عضویت
+]]..tostring(offlink)..[[  شروع🔛توقف تایید لینک 
+🌀 <b>]] .. tostring(ss)..[[</b> ثانیه تا بررسی لینک عضویت
+]]..tostring(nlink)..[[ شروع🔛توقف شناسایی لینک
+⛓ <b>]] .. tostring(wlinks)..[[</b> لینک شناسایی کرده
+]]..tostring(fwd)..[[ ارسال زمانی روشن🔛خاموش
+]].. tostring(autoanswer) ..[[ پاسخگوی خودکار روشن🔛خاموش
+]]..tostring(contact)..[[ شروع🔛توقف افزودن مخاطب
+]].. tostring(numadd) .. [[ افزودن با شماره روشن🔛خاموش
+]].. tostring(msgadd) ..[[  افزودن با پیام روشن🔛خاموش
+پیام ربات👈موقع اد کردن شراکانت👇 
+]] .. tostring(txtadd) ..[[ 
+حداکثر گروه<i> ]]..tostring(gp)..[[</i> 
+حداقل اعضا<i> ]]..tostring(mmbrs)..[[</i>
+📖 <b>]] .. tostring(contacts)..[[</b> مخاطب ذخیره شده
+📊 <b>]] .. tostring(links)..[[</b> لینک عضو و ذخیره کرده
+لیست لینک های جدید برای تبچی
+@x5060
+خروچ از همه گروهها👇⛔️
+*raja#
+👤 <b>]] .. tostring(usrs) .. [[</b> چت خصوصی
+🎎 <b>]] .. tostring(gps) .. [[</b> گروه عادی
+⬅️✍️🌈 <b>]] .. tostring(sgps) .. [[</b> سوپرگروه👭👬
+<b>]] .. tostring(sima) .. [[</b>
+ ]]
+					return send(msg.chat_id_, 0, text)
 					elseif text:match("^(افزودن همه مخاطبین)$") or text:match("^(اد کن)$") then
 						tdcli_function({
 							ID = "SearchContacts",
 							query_ = nil,
 							limit_ = 999999999
-						},function(i, naji)
-							local users, count = redis:smembers("botBOT-IDusers"), naji.total_count_
+						},function(i, raja)
+							local users, count = redis:smembers("botBOT-IDusers"), raja.total_count_
 							for n=0, tonumber(count) - 1 do
 								tdcli_function ({
 									ID = "AddChatMember",
 									chat_id_ = i.chat_id,
-									user_id_ = naji.users_[n].id_,
+									user_id_ = raja.users_[n].id_,
 									forward_limit_ = 50
 								},  dl_cb, nil)
 							end
